@@ -1,0 +1,61 @@
+﻿@using Points.Client.Services
+@using Points.Shared.Models
+@page "/modules"
+
+
+<h3>Module Overview</h3>
+
+@if (Modules == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>MinCnts</th>
+                <th>MaxCnts</th>
+                <th>Type</th>
+                <th>Signal</th>
+                <th>Channels</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var module in Modules)
+            {
+                Console.WriteLine(module.Name);
+                <tr>
+                    <td>@module.Name</td>
+                    <td>@module.MinCnts</td>
+                    <td>@module.MaxCnts</td>
+                    <td>@module.Type.ToString()</td>
+                    <td>@module.Signal.Units</td>
+                    <td>@module.Channels</td>
+                    <td class="btn-group-sm">
+                        <a href="/nowhere"
+                   class="btn btn-outline-primary">
+                            Edit
+                        </a>
+                        <button class="btn btn-outline-danger">
+                            Delete
+                        </button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+
+@code {
+    public List<Module>? Modules { get; set; }
+
+    [Inject]
+    private IModuleService _service { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+        Modules = (await _service.GetModulesAsync()).ToList();
+    }
+}
